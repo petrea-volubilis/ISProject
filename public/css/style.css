@@ -1,0 +1,146 @@
+/* cart page */
+.h {
+  height: 40px;
+}
+.h2 {
+  height: 80px;
+}
+.my-h {
+  height: 200px;
+  width: 200px;
+}
+.space-sm {
+  width: 10px;
+}
+
+.my-p {
+  max-width: 400px;
+  max-height: 200px;
+}
+
+/* cart page */
+
+.height-cart {
+  height: 40px;
+}
+
+.cart-page {
+  margin-top: 80px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cart-info {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.img {
+  height: 200px;
+  width: 250px;
+  /* max-height: 300px;
+    max-width: 400px; */
+}
+
+th {
+  padding: 5px;
+  text-align: left;
+  color: #fff;
+  background-color: grey;
+}
+
+td {
+  padding: 10px 5px;
+}
+
+td input {
+  width: 80px;
+  height: 30px;
+  padding: 5px;
+}
+
+td a {
+  color: lightcoral;
+  text-decoration: none;
+}
+
+td img {
+  width: 80px;
+  height: 80px;
+  margin-right: 10px;
+}
+
+.total-price {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.total-price table {
+  border-top: 3px solid grey;
+  width: 100%;
+  max-width: 550px;
+}
+
+td:last-child {
+  text-align: right;
+}
+
+th:last-child {
+  text-align: right;
+}
+
+.hide {
+  display: none;
+}
+
+/* footer */
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+}
+
+/* glow */
+.glow {
+  font-size: 80px;
+  color: #fff;
+  text-align: center;
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  -moz-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073,
+      0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+  }
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6,
+      0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+  }
+}
+
+/* cart img */
+.shopping-cart-img {
+  width: 30px;
+  height: 30px;
+}
+@media (max-width: 768px) {
+  .cart-btn {
+    margin-top: 10px;
+  }
+}
+@media (min-width: 768px) {
+  .cart-btn {
+    margin-left: 5px;
+    margin-top: 5px;
+  }
+}

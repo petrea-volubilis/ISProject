@@ -1,0 +1,14 @@
+/* sign up & login pages */
+@media (min-width: 768px) {
+  .Sign-up .form-control {
+    width: 100%;
+  }
+}
+.color-btn {
+  background-color: #006666;
+  color: white;
+  width: 100%;
+}
+.form-bg {
+  background-color: #00b3b3;
+}

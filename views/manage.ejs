@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <%- include('./includes/nav.ejs') %>
+
+
+    <main>
+      <section
+        class="container p-5 d-flex align-items-center justify-content-center"
+      >
+        <form
+          class="bg-success text-light p-4 rounded-3 my-4"
+          action="/add-plant"
+          method="POST"
+      
+        >
+          <h3 class="text-center mb-3">Add Plant</h1>
+          <section class="border border-3 p-3 m-3 rounded-3 border-light">
+            <div class="row">
+                <div class="mb-3 col">
+                  <label for="light" class="form-label">Light</label>
+                  <input
+                    name="light"
+                    type="text"
+                    class="form-control"
+                    id="light"
+                  />
+                </div>
+                <div class="mb-3 col">
+                  <label for="sof" class="form-label"
+                    >Season of interset</label
+                  >
+                  <input
+                    name="sof"
+                    type="text"
+                    class="form-control"
+                    id="sof"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="mb-3 col">
+                  <label for="fli" class="form-label"
+                    >Flower leaf interset</label
+                  >
+                  <input
+                    name="fli"
+                    type="text"
+                    class="form-control"
+                    id="fli"
+                  />
+                </div>
+                <div class="mb-3 col">
+                  <label for="pruning" class="form-label">Pruning</label>
+                  <input
+                    name="pruning"
+                    type="text"
+                    class="form-control"
+                    id="pruning"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="mb-3 col">
+                  <label for="lu" class="form-label">Landscape use</label>
+                  <input
+                    name="lu"
+                    type="text"
+                    class="form-control"
+                    id="lu"
+                  />
+                </div>
+                <div class="mb-3 col">
+                  <label for="gh" class="form-label">Growth habit</label>
+                  <input
+                    name="gh"
+                    type="text"
+                    class="form-control"
+                    id="gh"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="mb-3 col">
+                  <label for="sn" class="form-label"
+                    >Scientific name</label
+                  >
+                  <input
+                    name="sn"
+                    type="text"
+                    class="form-control"
+                    id="sn"
+                  />
+                </div>
+                <div class="mb-3 col">
+                  <label for="soil" class="form-label">Soil</label>
+                  <input
+                    name="soil"
+                    type="text"
+                    class="form-control"
+                    id="soil"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="mb-3 col">
+                  <label for="category" class="form-label">Category</label>
+                  <input
+                    name="category"
+                    type="text"
+                    class="form-control"
+                    id="category"
+                  />
+                </div>
+                <div class="mb-3 col">
+                  <label for="spread" class="form-label">Spread</label>
+                  <input
+                    name="spread"
+                    type="text"
+                    class="form-control"
+                    id="spread"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="mb-3 col-6">
+                  <label for="height" class="form-label">Height</label>
+                  <input
+                    name="height"
+                    type="text"
+                    class="form-control w-3"
+                    id="height"
+                  />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="desc" class="form-label">Description</label>
+                <textarea
+                  class="form-control w-3"
+                  name="desc"
+                  id="desc"
+                  cols="20"
+                  rows="5"
+                ></textarea>
+              </div>
+          </section>
+          <div class="d-grid">
+            <button class="btn btn-dark" type="submit">Add</button>
+          </div>
+        </form>
+      </section>
+    </main>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
