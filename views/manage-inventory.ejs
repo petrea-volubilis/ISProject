@@ -38,22 +38,12 @@
                 <div class="row">
                   <% if(isAuthenticated) { %>
                   <div class="col">
-                    <form action="/cart" method="post">
-                      <button
-                        style="width: 100%"
-                        id="addToCart"
-                        class="btn btn-light text-warning"
-                        type="submit"
-                      >
-                        Add To Cart
-                      </button>
-                      <input
-                        id="plantIn"
-                        type="hidden"
-                        name="plantId"
-                        value="<%= plants[i].IPID %>"
-                      />
-                    </form>
+                    <a
+                      style="width: 100%"
+                      href="/edit-inventory/<%= plants[i].IPID %>"
+                      class="btn btn-light text-warning"
+                      >Edit</a
+                    >
                   </div>
                   <% } %>
                   <span class="my-1"></span>

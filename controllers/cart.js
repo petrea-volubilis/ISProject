@@ -2,8 +2,8 @@ const db = require("../util/database");
 
 exports.getCart = (req, res, next) => {
   db.execute(
-    "SELECT * FROM cart_item c JOIN inventory_plant USING(IPID) WHERE c.customer_id = ?",
-    [req.user.customer_id]
+    "SELECT * FROM cart_item c JOIN inventory_plant USING(IPID) WHERE c.user_id = ?",
+    [req.user.user_id]
   )
     .then((myPlants) => {
       console.log(myPlants[0]);
@@ -20,7 +20,7 @@ exports.getCart = (req, res, next) => {
 
 exports.postCart = (req, res, next) => {
   const plantId = req.body.plantId;
-  addToCart(req.user.customer_id, plantId)
+  addToCart(req.user.user_id, plantId)
     .then(() => {
       res.redirect("/cart");
     })
@@ -29,18 +29,18 @@ exports.postCart = (req, res, next) => {
     });
 };
 
-const addToCart = (customerId, plantId) => {
-  console.log("im here", customerId, plantId);
+const addToCart = (userId, plantId) => {
+  console.log("im here", userId, plantId);
   return db
-    .execute("SELECT * FROM cart_item WHERE IPID = ? AND customer_id = ?", [
+    .execute("SELECT * FROM cart_item WHERE IPID = ? AND user_id = ?", [
       plantId,
-      customerId,
+      userId,
     ])
     .then((result) => {
       if (result[0].length == 0) {
         return db.execute("INSERT INTO cart_item VALUES (? , ? , ?)", [
           plantId,
-          customerId,
+          userId,
           1,
         ]);
       } else {
@@ -48,8 +48,8 @@ const addToCart = (customerId, plantId) => {
         let q = result[0][0].item_quantity + 1;
         return db.execute(
           `UPDATE cart_item SET item_quantity = ?
-       WHERE IPID = ? AND customer_id = ?`,
-          [q, plantId, customerId]
+       WHERE IPID = ? AND user_id = ?`,
+          [q, plantId, userId]
         );
       }
     })
@@ -60,13 +60,13 @@ const addToCart = (customerId, plantId) => {
 
 exports.postQuantity = (req, res, next) => {
   const q = req.body.quantity;
-  const customerId = req.body.cusId;
+  const userId = req.body.cusId;
   const plantId = req.body.IPID;
-  // console.log(q, customerId, plantId);
+  // console.log(q, userId, plantId);
   db.execute(
     `UPDATE cart_item SET item_quantity = ?
-    WHERE IPID = ? AND customer_id = ?`,
-    [q, plantId, customerId]
+    WHERE IPID = ? AND user_id = ?`,
+    [q, plantId, userId]
   )
     .then((result) => {
       res.redirect("/cart");
@@ -94,9 +94,9 @@ exports.postCartDeleteProduct = (req, res, next) => {
 
 exports.getDeleteItem = (req, res, next) => {
   const IPID = req.params.IPID;
-  const cusId = req.params.customer_id;
+  const cusId = req.params.user_id;
   console.log(IPID, cusId);
-  db.execute("DELETE FROM cart_item WHERE IPID = ? AND customer_id = ?", [
+  db.execute("DELETE FROM cart_item WHERE IPID = ? AND user_id = ?", [
     IPID,
     cusId,
   ])

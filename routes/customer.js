@@ -40,7 +40,7 @@ router.post(
       .withMessage("Please enter a valid email.")
       .custom((value, { req }) => {
         return db
-          .execute(`SELECT * FROM customer WHERE email = ?`, [value])
+          .execute(`SELECT * FROM user WHERE email = ?`, [value])
           .then((result) => {
             console.log("tt");
             if (result[0].length > 0)
@@ -66,7 +66,7 @@ router.post(
   customerController.postSignUp
 );
 
-router.get("/login-success", plantController.getPlants);
+router.get("/login-success", plantController.success);
 
 router.get("/login-failure", (req, res, next) => {
   let email = require("../AuthInfo").getEmail();
@@ -80,5 +80,9 @@ router.get("/login-failure", (req, res, next) => {
 });
 
 router.post("/logout", customerController.postLogout);
+
+router.get("/contact", customerController.getContact);
+
+router.get("/about", customerController.getAbout);
 
 module.exports = router;
