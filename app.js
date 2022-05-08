@@ -80,7 +80,9 @@ app.use((req, res, next) => {
   }
   console.log(isAuthenticated);
   res.locals.isAuthenticated = isAuthenticated;
-  res.locals.role = req.user.role;
+  if(req.user){
+    res.locals.role = req.user.role;
+  }
   next();
 });
 
