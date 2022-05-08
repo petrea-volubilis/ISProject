@@ -10,7 +10,7 @@ const customFields = {
 
 const verifyCallback = (username, password, done) => {
   console.log("verify");
-  db.execute("SELECT * FROM customer WHERE email = ?", [username])
+  db.execute("SELECT * FROM user WHERE email = ?", [username])
     .then((result) => {
       if (result[0].length == 0) {
         return done(null, false);
@@ -42,11 +42,11 @@ const strategy = new LocalStrategy(customFields, verifyCallback, {
 passport.use(strategy);
 
 passport.serializeUser((user, done) => {
-  done(null, user.customer_id);
+  done(null, user.user_id);
 });
 
 passport.deserializeUser((userId, done) => {
-  db.execute("SELECT * FROM customer WHERE customer_id = ?", [userId])
+  db.execute("SELECT * FROM user WHERE user_id = ?", [userId])
     .then((result) => {
       done(null, result[0][0]);
     })

@@ -47,8 +47,8 @@ exports.postSignUp = (req, res, next) => {
   } else {
     console.log("222");
     db.execute(
-      "INSERT INTO customer(email , password , salt) VALUES(? , ? , ?)",
-      [email, hash, salt]
+      "INSERT INTO user(email , password , salt, role) VALUES(? , ? , ?, ?)",
+      [email, hash, salt, "c"]
     )
       .then(() => {
         res.redirect("/login");
@@ -75,7 +75,7 @@ exports.postLogin = (req, res, next) => {
       },
     });
   } else {
-    db.execute("SELECT * FROM customer WHERE email = ?", [email])
+    db.execute("SELECT * FROM user WHERE email = ?", [email])
       .then((result) => {
         if (result[0].length == 0) {
           return res.status(422).render("login", {
@@ -105,3 +105,7 @@ exports.postLogout = (req, res, next) => {
     res.redirect("/");
   });
 };
+
+exports.getContact = (req, res, next) => {};
+
+exports.getAbout = (req, res, next) => {};

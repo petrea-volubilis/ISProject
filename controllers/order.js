@@ -7,9 +7,7 @@ const db = require("../util/database");
 
 exports.getOrders = (req, res, next) => {
   let num = 0;
-  db.execute("SELECT * FROM wahah.order WHERE customer_id = ?", [
-    req.user.customer_id,
-  ])
+  db.execute("SELECT * FROM wahah.order WHERE user_id = ?", [req.user.user_id])
     .then((result) => {
       let orders = result[0];
       let myOrders = orders;
@@ -56,9 +54,7 @@ exports.getOrders = (req, res, next) => {
 
 exports.postOrder = (req, res, next) => {
   //check quantity and check if empty
-  db.execute("SELECT * FROM cart_item WHERE customer_id = ?", [
-    req.user.customer_id,
-  ])
+  db.execute("SELECT * FROM cart_item WHERE user_id = ?", [req.user.user_id])
     .then((result) => {
       //   console.log("poo");
       //   console.log(result[0]);
@@ -66,8 +62,8 @@ exports.postOrder = (req, res, next) => {
         return "yes";
       } else {
         return db
-          .execute("INSERT INTO wahah.order(customer_id) VALUES(?)", [
-            req.user.customer_id,
+          .execute("INSERT INTO wahah.order(user_id) VALUES(?)", [
+            req.user.user_id,
           ])
           .then((result) => {
             //   console.log(result);
@@ -76,13 +72,13 @@ exports.postOrder = (req, res, next) => {
               `INSERT INTO order_item
               SELECT ${no} AS order_no , IPID , item_quantity as oi_quantity
               FROM cart_item c JOIN inventory_plant p USING(IPID)
-              WHERE c.customer_id = ?`,
-              [req.user.customer_id]
+              WHERE c.user_id = ?`,
+              [req.user.user_id]
             );
           })
           .then((result) => {
-            return db.execute("DELETE FROM cart_item WHERE customer_id = ?", [
-              req.user.customer_id,
+            return db.execute("DELETE FROM cart_item WHERE user_id = ?", [
+              req.user.user_id,
             ]);
           });
       }
@@ -107,7 +103,7 @@ exports.getInvoice = (req, res, next) => {
       if (order[0].length === 0) {
         return next(new Error("No order found."));
       }
-      if (order[0][0].customer_id !== req.user.customer_id) {
+      if (order[0][0].user_id !== req.user.user_id) {
         return next(new Error("Unauthorized"));
       }
       const invoiceName = "invoice-" + orderId + ".pdf";
@@ -122,9 +118,7 @@ exports.getInvoice = (req, res, next) => {
       pdfDoc.pipe(fs.createWriteStream(invoicePath));
       pdfDoc.pipe(res);
 
-      pdfDoc.fontSize(26).text("Invoice", {
-        underline: true,
-      });
+      pdfDoc.fontSize(26).text("Invoice");
       pdfDoc.text("-----------------------");
       let totalPrice = 0;
       db.execute(
@@ -140,8 +134,11 @@ exports.getInvoice = (req, res, next) => {
               prod.name + " - " + prod.oi_quantity + " x " + "$" + prod.price
             );
         });
-        pdfDoc.text("---");
-        pdfDoc.fontSize(20).text("Total Price: $" + totalPrice);
+        pdfDoc.fontSize(26).text("-----------------------");
+        pdfDoc.fontSize(20).text("Total Price: $" + totalPrice.toFixed(2));
+        pdfDoc
+          .fontSize(20)
+          .text("Total Price After Taxes: $" + (totalPrice * 1.15).toFixed(2));
 
         pdfDoc.end();
       });

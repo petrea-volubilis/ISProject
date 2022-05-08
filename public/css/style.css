@@ -1,3 +1,29 @@
+@media (min-width: 768px) {
+  .news-input {
+    width: 50%;
+  }
+}
+@media (min-width: 768px) {
+  .news-input {
+    width: 50%;
+  }
+}
+
+/* sign up & login pages */
+@media (min-width: 768px) {
+  .Sign-up .form-control {
+    width: 100%;
+  }
+}
+.color-btn {
+  background-color: #006666;
+  color: white;
+  width: 100%;
+}
+.form-bg {
+  background-color: #00b3b3;
+}
+
 /* cart page */
 .h {
   height: 40px;
@@ -143,4 +169,164 @@ th:last-child {
     margin-left: 5px;
     margin-top: 5px;
   }
+}
+/* .cart-btn {
+  background-color: gray;
+  border-radius: 15px;
+  border-color: black;
+  margin-left: 10px;
+  width: 60px;
+  height: 40px;
+} */
+
+/* reviews */
+
+.fa {
+  font-size: 25px;
+}
+
+.checked {
+  color: orange;
+}
+
+/* Three column layout */
+.side {
+  float: left;
+  width: 15%;
+  margin-top: 10px;
+}
+
+.middle {
+  float: left;
+  width: 70%;
+  margin-top: 10px;
+}
+
+/* Place text to the right */
+.right {
+  text-align: right;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* The bar container */
+.bar-container {
+  width: 100%;
+  background-color: #f1f1f1;
+  text-align: center;
+  color: white;
+}
+
+/* Individual bars */
+.bar-5 {
+  width: 60%;
+  height: 18px;
+  background-color: #04aa6d;
+}
+.bar-4 {
+  width: 30%;
+  height: 18px;
+  background-color: #2196f3;
+}
+.bar-3 {
+  width: 10%;
+  height: 18px;
+  background-color: #00bcd4;
+}
+.bar-2 {
+  width: 4%;
+  height: 18px;
+  background-color: #ff9800;
+}
+.bar-1 {
+  width: 15%;
+  height: 18px;
+  background-color: #f44336;
+}
+
+/* Responsive layout - make the columns stack on top of each other instead of next to each other */
+@media (max-width: 400px) {
+  .side,
+  .middle {
+    width: 100%;
+  }
+  /* Hide the right column on small screens */
+  .right {
+    display: none;
+  }
+}
+
+.product-img {
+  height: 100%;
+  width: 100%;
+}
+
+.product-w {
+  width: 25%;
+}
+
+/* detail-product-img */
+
+#detail-product-img {
+  height: 500px;
+  width: 500px;
+}
+
+@media (max-width: 576px) {
+  #detail-product-img {
+    width: 400px;
+    height: 400px;
+  }
+}
+
+#errMessage {
+  width: 300px;
+  border: indianred 3px solid;
+  border-radius: 3px;
+}
+
+#index-products img {
+  height: 400px;
+}
+
+#site {
+  border: black 3px solid;
+  border-radius: 3px;
+  color: black;
+}
+
+#site:hover {
+  background-color: black;
+  color: white;
+}
+
+.account-img {
+  width: 45px;
+  height: 45px;
+
+  border-radius: 30px;
+}
+
+#account {
+  margin-left: 15px;
+}
+
+.account-list-item:hover {
+  background-color: #bebebe;
+}
+
+.logout {
+  background-color: white;
+  color: black;
+  width: 100%;
+  border: none;
+}
+
+.logout:hover {
+  background-color: #bebebe;
 }
