@@ -18,7 +18,7 @@ exports.postAddPlant = (req, res, next) => {
   const spread = req.body.spread;
   const height = req.body.height;
   const desc = req.body.desc;
-
+ 
   db.execute(
     "INSERT INTO plant(light , season_of_interest , flower_leaf_interest , pruning , landscape_use , growth_habit , scientific_name " +
       " , soil , category , spread , height , decription) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
@@ -32,6 +32,7 @@ exports.postAddPlant = (req, res, next) => {
       const error = new Error(err);
       error.httpStatusCode = 500;
       return next(error);
+     
     });
 };
 
