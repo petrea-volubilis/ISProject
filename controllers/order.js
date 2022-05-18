@@ -52,23 +52,24 @@ exports.getOrders = (req, res, next) => {
     });
 };
 
-exports.postOrder = (req, res, next) => {
+exports.postOrder =async (req, res, next) => {
   //check quantity and check if empty
-  db.execute("SELECT * FROM cart_item WHERE user_id = ?", [req.user.user_id])
+  try{
+  await db.execute("SELECT * FROM cart_item WHERE user_id = ?", [req.user.user_id])
     .then((result) => {
       //   console.log("poo");
       //   console.log(result[0]);
       if (result[0].length == 0) {
         return "yes";
       } else {
-        return db
+        return  db
           .execute("INSERT INTO wahah.order(user_id) VALUES(?)", [
             req.user.user_id,
           ])
           .then((result) => {
             //   console.log(result);
             let no = result[0].insertId;
-            return db.execute(
+            return  db.execute(
               `INSERT INTO order_item
               SELECT ${no} AS order_no , IPID , item_quantity as oi_quantity
               FROM cart_item c JOIN inventory_plant p USING(IPID)
@@ -88,12 +89,16 @@ exports.postOrder = (req, res, next) => {
       if (result == "yes") {
         res.redirect("/cart");
       } else {
+        console.log('dddggggggggg');
         res.redirect("/order");
+        res.status(201);
       }
     })
-    .catch((err) => {
+  }catch(err)  {
+    console.log(err);
+      res.status(500);
       next(err);
-    });
+    };
 };
 
 exports.getInvoice = (req, res, next) => {

@@ -24,19 +24,20 @@ exports.getSignUp = (req, res, next) => {
   });
 };
 
-exports.postSignUp = (req, res, next) => {
+exports.postSignUp = async(req, res, next) => {
   console.log(req.body);
-  const saltHash = genPassword(req.body.password);
+    const saltHash =await genPassword(req.body.password);
 
   const salt = saltHash.salt;
   const hash = saltHash.hash;
 
   const email = req.body.email;
   const password = req.body.password;
-
-  const errors = validationResult(req);
+ const errors = await validationResult(req);
+ console.log(errors);
   if (!errors.isEmpty()) {
     console.log("here");
+    console.log(errors.array()[0]);
     res.render("signup", {
       errorMessage: errors.array()[0].msg,
       oldInput: {
@@ -46,7 +47,7 @@ exports.postSignUp = (req, res, next) => {
     });
   } else {
     console.log("222");
-    db.execute(
+    await db.execute(
       "INSERT INTO user(email , password , salt, role) VALUES(? , ? , ?, ?)",
       [email, hash, salt, "c"]
     )
@@ -59,7 +60,7 @@ exports.postSignUp = (req, res, next) => {
   }
 };
 
-exports.postLogin = (req, res, next) => {
+exports.postLogin =async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
@@ -75,7 +76,7 @@ exports.postLogin = (req, res, next) => {
       },
     });
   } else {
-    db.execute("SELECT * FROM user WHERE email = ?", [email])
+   await db.execute("SELECT * FROM user WHERE email = ?", [email])
       .then((result) => {
         if (result[0].length == 0) {
           return res.status(422).render("login", {
