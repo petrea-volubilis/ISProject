@@ -7,7 +7,6 @@ exports.getCart = async (req, res, next) => {
     [req.user.user_id]
   )
     .then((myPlants) => {
-      console.log(myPlants[0]);
       res.render("cart", {
         plants: myPlants[0],
       });
@@ -33,8 +32,7 @@ exports.postCart = (req, res, next) => {
 };
 
 const addToCart = async(userId, plantId) => {
-  console.log("im here", userId, plantId);
-  console.log("im here111111111");
+  
   return  db
     .execute("SELECT * FROM cart_item WHERE IPID = ? AND user_id = ?", [
       plantId,
@@ -68,7 +66,7 @@ exports.postQuantity = async (req, res, next) => {
   const q = req.body.quantity;
   const userId = req.body.cusId;
   const plantId = req.body.IPID;
-  console.log(q, userId, plantId);
+  console.log(q ,userId ,plantId);
   try{
   await db.execute(
     `UPDATE cart_item SET item_quantity = ?
@@ -105,9 +103,9 @@ exports.postCartDeleteProduct =async (req, res, next) => {
 };
 
 exports.getDeleteItem = async (req, res, next) => {
+  console.log(here);
   const IPID = req.params.IPID;
   const cusId = req.params.user_id;
-  console.log(IPID, cusId);
   try{
   await db.execute("DELETE FROM cart_item WHERE IPID = ? AND user_id = ?", [
     IPID,

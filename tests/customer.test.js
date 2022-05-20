@@ -6,30 +6,30 @@ const { validationResult } = require("express-validator/check");
 const { check, body } = require("express-validator/check");
 
 
-// test('add user correctly',async()=>{
-// const req={
-//     body:{
-//         password:'password',
-//         email:'abdullah@gmail.com'
-//     },
-// }
-// const res={
-//     redirect:function (d){
+test('add user correctly',async()=>{
+const req={
+    body:{
+        password:'password',
+        email:'abdullah@gmail.com'
+    },
+}
+const res={
+    redirect:function (d){
 
-//     },
-//     render:function (d,s){
+    },
+    render:function (d,s){
 
-//     }
-// }
-// await customer.postSignUp(req,res,()=>{});
-// await db.execute("SELECT * FROM user WHERE email = ?", [req.body.email])
-//       .then((result) => {
-//        expect(result[0][0].email).toBe(req.body.email)
-//         } )
+    }
+}
+await customer.postSignUp(req,res,()=>{});
+await db.execute("SELECT * FROM user WHERE email = ?", [req.body.email])
+      .then((result) => {
+       expect(result[0][0].email).toBe(req.body.email)
+        } )
 
-//  await deletuser('abdullah@gmail.com');
+ await deletuser('abdullah@gmail.com');
 
-// })
+})
 
 test('should return statusCode 200 the entered email exsist accunt',async()=>{
     const req={

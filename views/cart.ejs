@@ -37,15 +37,16 @@
                             <p class="mb-1"><%=plants[i].name%></p>
                             <small>Price: $<%=plants[i].price%></small>
                             <br>
-                            <a href="/cart/<%= plants[i].IPID %>/<%= plants[i].customer_id %>" class="remove">Remove</a>
+                            <a href="/cart/<%= plants[i].IPID %>/<%= plants[i].user_id %>" class="remove">Remove</a>
                             
                         </div>
                     </div>
                 </td>
                 <td>
                     <form action="/edit-quantity" method="post">
-                        <input name="quantity" class = "num" type="number" value="<%=plants[i].item_quantity%>" min="1" max="1000">
-                        <input type="hidden" name="cusId" value="<%=plants[i].customer_id%>">
+
+                        <input name="quantity" class = "num" type="number" value="<%=plants[i].item_quantity%>" min="1" max="<%=plants[i].quantity%">
+                        <input type="hidden" name="cusId" value="<%=plants[i].user_id%>">
                         <input type="hidden" name="IPID" value="<%=plants[i].IPID%>">
                     </form>
                 </td>

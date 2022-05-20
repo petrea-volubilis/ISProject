@@ -25,7 +25,6 @@ exports.getSignUp = (req, res, next) => {
 };
 
 exports.postSignUp = async(req, res, next) => {
-  console.log(req.body);
     const saltHash =await genPassword(req.body.password);
 
   const salt = saltHash.salt;
@@ -34,10 +33,7 @@ exports.postSignUp = async(req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
  const errors = await validationResult(req);
- console.log(errors);
   if (!errors.isEmpty()) {
-    console.log("here");
-    console.log(errors.array()[0]);
     res.render("signup", {
       errorMessage: errors.array()[0].msg,
       oldInput: {
@@ -46,7 +42,6 @@ exports.postSignUp = async(req, res, next) => {
       },
     });
   } else {
-    console.log("222");
     await db.execute(
       "INSERT INTO user(email , password , salt, role) VALUES(? , ? , ?, ?)",
       [email, hash, salt, "c"]
@@ -59,7 +54,9 @@ exports.postSignUp = async(req, res, next) => {
       });
   }
 };
-
+exports.getAbout = (req, res, next) => {
+  res.render("about");
+};
 exports.postLogin =async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -89,7 +86,6 @@ exports.postLogin =async (req, res, next) => {
         } else {
           let mail = require("../AuthInfo");
           mail.setEmail(email);
-          console.log("xxx");
           next();
         }
       })
@@ -109,4 +105,3 @@ exports.postLogout = (req, res, next) => {
 
 exports.getContact = (req, res, next) => {};
 
-exports.getAbout = (req, res, next) => {};

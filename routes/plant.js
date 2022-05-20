@@ -13,13 +13,17 @@ router.get("/add-inventory", isAuth, plantController.getAddInventory);
 
 router.post("/add-inventory", isAuth, plantController.postAddInventory);
 
+router.get("/inventory", isAuth, plantController.getInventory);
+
+router.post("/filterByCategory", plantController.postfilterByCatgory);
+
 router.get("/manage-plant", plantController.getManagePlant);
 
 router.post("/manage-plant", plantController.getEditPlant);
 
 router.post("/edit-plant", isAuth, plantController.postEditPlant);
 
-// router.get("/edit-plant", isAuth, plantController.getEditPlant);
+router.get("/edit-plant", isAuth, plantController.getEditPlant);
 
 router.get("/manage", plantController.getManage);
 

@@ -28,7 +28,6 @@ exports.getOrders = (req, res, next) => {
 
                 num = num + 1;
                 if (num == myOrders.length) {
-                  console.log("finish");
                   res.render("order", {
                     orders: myOrders,
                   });
@@ -57,8 +56,7 @@ exports.postOrder =async (req, res, next) => {
   try{
   await db.execute("SELECT * FROM cart_item WHERE user_id = ?", [req.user.user_id])
     .then((result) => {
-      //   console.log("poo");
-      //   console.log(result[0]);
+  
       if (result[0].length == 0) {
         return "yes";
       } else {
@@ -67,7 +65,6 @@ exports.postOrder =async (req, res, next) => {
             req.user.user_id,
           ])
           .then((result) => {
-            //   console.log(result);
             let no = result[0].insertId;
             return  db.execute(
               `INSERT INTO order_item
@@ -85,7 +82,6 @@ exports.postOrder =async (req, res, next) => {
       }
     })
     .then((result) => {
-      //   console.log(result);
       if (result == "yes") {
         res.redirect("/cart");
       } else {

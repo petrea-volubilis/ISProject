@@ -12,9 +12,10 @@ test('should return plant in the cart  after call getcart',async()=>{
     //create dummy user,plant...
     await addPlantToCart();
     //get id for the dummy user
-   const user_id= await db.execute('SELECT * FROM  wahah.user where email=?',['abdullah@gmail.com'])
+   let user_id=0;
+    await db.execute('SELECT user_id FROM  wahah.user where email=?',['abdullah@gmail.com'])
 .then(result=>{
- return result[0][0].user_id
+  user_id= result[0][0].user_id
 });
     const req={
         user:{user_id}
@@ -200,7 +201,6 @@ await db.execute(
         },
         http:null,
         redirect: function(c){
-          console.log(c);
             return http=c;
          } ,
         
@@ -436,7 +436,6 @@ async function addinventory(name) {
         [name,'sd', 5, 5, 4,54,'gpj']
       )
         .then(() => {
-          console.log("Created inventory");
         })
         .catch((err) => {
             console.log(err);

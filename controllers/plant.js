@@ -10,7 +10,6 @@ exports.getAddPlant = (req, res, next) => {
 };
 
 exports.postAddPlant = async(req, res, next) => {
-  // console.log(req.body);
   const light = req.body.light;
   const sof = req.body.sof;
   const fli = req.body.fli;
@@ -30,11 +29,9 @@ exports.postAddPlant = async(req, res, next) => {
     [sn,light, sof, fli, pruning, lu, gh,  soil, category, spread, height, desc]
   )
     .then(() => {
-      console.log("Created Product");
       res.redirect("/add-plant");
     })
     .catch((err) => {
-      console.log("i am hear");
 
       res.status(500);
       const error = new Error(err);
@@ -49,12 +46,10 @@ exports.getAddInventory =async (req, res, next) => {
   await db.execute("SELECT * FROM plant")
     .then((result) => {
       result = result[0];
-      // console.log(result);
       let names = [];
       for (let i = 0; i < result.length; i++) {
         names.push(result[i].scientific_name);
       }
-      console.log(names);
       res.render("add-inventory", {
         plants: names,
       });
@@ -67,18 +62,82 @@ exports.getAddInventory =async (req, res, next) => {
     };
 };
 
+
+exports.postfilterByCatgory =async (req, res, next) => {
+  
+  const category=req.body.catg;
+  console.log('welcom');
+  console.log(req.body);
+  const page = +req.query.page || 1;
+  let totalItems;
+if (category=="") {
+  
+}else{
+  db.execute("SELECT COUNT(*) AS count FROM inventory_plant")
+    .then((result) => {
+      totalItems = result[0][0].count;
+      let skip = (page - 1) * ITEMS_PER_PAGE;
+      return db.execute(
+        `SELECT * FROM plant p , inventory_plant ip where p.scientific_name = ip.plant_id and p.category=? LIMIT ${skip} , ${ITEMS_PER_PAGE}`
+      ,[category]);
+    })
+    .then((products) => {
+      if(products[0].length>0){
+      console.log(products[0]);
+      res.render("plants", {
+        plants: products[0],
+        currentPage: page,
+        hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+        hasPreviousPage: page > 1,
+        nextPage: page + 1,
+        previousPage: page - 1,
+        lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
+      });}
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+       next(error);
+    });}
+};
+
+exports.details = async(req, res, next) => {
+  const plantId = req.params.plantId;
+  try{
+  await db.execute(
+    "SELECT * FROM plant p , inventory_plant ip where p.scientific_name = ip.plant_id and IPID = ?",
+    [plantId]
+  )
+    .then((result) => {
+      myPlant = result[0][0];
+      res.render("plant-detail", {
+        plant: myPlant,
+      });
+    })
+  }catch(err)  {
+    res.status(500);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    };
+};
 exports.postAddInventory =  async(req, res, next) => {
-  // console.log(req.body);
   const p = req.body.p;
   const name = req.body.name;
   const size = req.body.size;
   const color = req.body.color;
   const quantity = req.body.quantity;
   const price = req.body.price;
-  const image = req.file;
-  console.log(image);
-  imageUrl = image.path;
-  console.log(image, imageUrl);
+  let image = req.file;
+
+  if (req.file==undefined) {
+    imageUrl="";  
+
+  }else{
+    imageUrl = image.path;
+
+  }
+  
   //handle if no plant match in select input , or use the table in the db
   try{
    await db.execute("SELECT scientific_name FROM plant WHERE scientific_name = ?", [
@@ -90,7 +149,6 @@ exports.postAddInventory =  async(req, res, next) => {
       [id, name, size, color, quantity, price, imageUrl]
     )
       .then(() => {
-        console.log("Created Product");
         res.redirect("/add-inventory");
       })
       
@@ -145,7 +203,6 @@ exports.details = async(req, res, next) => {
   )
     .then((result) => {
       myPlant = result[0][0];
-      console.log(myPlant);
       res.render("plant-detail", {
         plant: myPlant,
       });
@@ -157,18 +214,28 @@ exports.details = async(req, res, next) => {
       return next(error);
     };
 };
-
+exports.getInventory= async (req, res, next) => {
+  db.execute("SELECT * FROM wahah.inventory_plant").then(result=>{
+    console.log(result[0]);
+    res.render("inventory", {
+      inventory: result[0],
+    }).catch(err=>{
+      res.status(500);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+  })
+};
 exports.getManagePlant = async(req, res, next) => {
   try{
   await db.execute("SELECT * FROM plant")
     .then((result) => {
       result = result[0];
-      // console.log(result);
       let names = [];
       for (let i = 0; i < result.length; i++) {
         names.push(result[i].scientific_name);
       }
-      // console.log(names);
       res.render("manage-plant", {
         plants: names,
       });
@@ -182,12 +249,10 @@ exports.getManagePlant = async(req, res, next) => {
 };
 
 exports.getEditPlant = async (req, res, next) => {
-  console.log(req.body.p);
   let name = req.body.p;
    await db.execute("SELECT * FROM plant where scientific_name = ?", [name])
     .then((result) => {
       info = result[0][0];
-      console.log(info);
 
       res.render("edit-plant", {
         plant: info,
@@ -220,7 +285,6 @@ try{
     [light, sof, fli, pruning, lu, gh, soil, category, spread, height, desc, sn]
   )
     .then(() => {
-      console.log("Edited Plant info");
       res.redirect("/");
     })
   }catch(err)  {
@@ -233,17 +297,13 @@ try{
 
 exports.getEditInventory = (req, res, next) => {
   const IPID = req.params.plantId;
-  console.log("ID = " + IPID);
   db.execute("SELECT * FROM inventory_plant where IPID = ?", [IPID])
     .then((result) => {
       info = result[0][0];
-      console.log(info);
-      // console.log(result);
       // let names = [];
       // for (let i = 0; i < result.length; i++) {
       //   names.push(result[i].scientific_name);
       // }
-      // console.log(names);
       res.render("edit-invent", {
         plant: info,
       });
@@ -264,9 +324,7 @@ exports.postEditInventory = async (req, res, next) => {
   const price = req.body.price;
   const image = req.file;
   const IPID = req.body.IPID;
-  console.log(req.body);
-  console.log("IPID = " + IPID);
-  console.log(image);
+ 
   imageUrl = "";
   if (image) {
     imageUrl = image.path;

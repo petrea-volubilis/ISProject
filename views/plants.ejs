@@ -20,6 +20,25 @@
   <body>
     <div class="h2"></div>
     <%- include('./includes/nav.ejs') %>
+
+
+
+    <form method="post" action="/filterByCategory">
+    <div class="input-group news-input">
+      <input
+      name="catg"
+      id="catg"
+        type="text"
+        class="form-control"
+        placeholder="Filter by category"
+      />
+       
+    </div>
+    <input class="btn btn-secondary" type="submit" value="Search"  />
+
+  </form>
+
+
     <sction class="p-5 my-5" id="products">
       <div class="container">
         <div class="row text-center g-3">
