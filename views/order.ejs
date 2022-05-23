@@ -20,7 +20,7 @@
   <body>
     <div class="h2"></div>
     <%- include('./includes/nav.ejs') %>
-    <main class="container">
+    <main class="container my-5 py-5">
       <% if (orders.length <= 0) { %>
       <h1 style="text-align: center; margin-top: 20px">Nothing there!</h1>
 
@@ -50,6 +50,8 @@
       </div>
       <% } %>
     </main>
+    <div class="h2"></div>
+
     <%-include('./includes/footer1.ejs')%>
 
     <script

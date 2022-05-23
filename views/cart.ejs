@@ -37,15 +37,15 @@
                             <p class="mb-1"><%=plants[i].name%></p>
                             <small>Price: $<%=plants[i].price%></small>
                             <br>
-                            <a href="/cart/<%= plants[i].IPID %>/<%= plants[i].customer_id %>" class="remove">Remove</a>
+                            <a href="/cart/<%= plants[i].IPID %>/<%= plants[i].user_id %>" class="remove">Remove</a>
                             
                         </div>
                     </div>
                 </td>
                 <td>
                     <form action="/edit-quantity" method="post">
-                        <input name="quantity" class = "num" type="number" value="<%=plants[i].item_quantity%>" min="1" max="1000">
-                        <input type="hidden" name="cusId" value="<%=plants[i].customer_id%>">
+                        <input name="quantity" class = "num" type="number" value="<%=plants[i].item_quantity%>" min="1" max="<%=plants[i].quantity%>">
+                        <input type="hidden" name="cusId" value="<%=plants[i].user_id%>">
                         <input type="hidden" name="IPID" value="<%=plants[i].IPID%>">
                     </form>
                 </td>
@@ -58,15 +58,15 @@
             <table>
                 <tr>
                     <td>Subtotal</td>
-                    <td id="subtotal">$335.00</td>
+                    <td id="subtotal">$0</td>
                 </tr>
                 <tr>
                     <td>Taxes</td>
-                    <td id="taxes">$35.00</td>
+                    <td id="taxes">$0</td>
                 </tr>
                 <tr>
                     <td>Total</td>
-                    <td id="total">$370.00</td>
+                    <td id="total">$0</td>
                 </tr>
             </table>
         </div>
@@ -77,6 +77,8 @@
             </form>            
         </div>
     </main>
+    <div style="height: 160px"></div>
+
     <%-include('./includes/footer1.ejs')%>
 
     <script

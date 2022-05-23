@@ -20,29 +20,47 @@
           <li class="nav-item">
             <a class="nav-link text-light" href="/plants">Plants</a>
           </li>
+          
           <% if(isAuthenticated) { %>
           <li class="nav-item">
             <a class="nav-link text-light" href="/order">orders</a>
           </li>
+          
           <% if(role == "mm") { %>
-          <li class="nav-item">
-            <a class="nav-link text-light" href="/add-plant">Add Plant</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-light" href="/add-inventory">Add Inventory</a>
-          </li>
+            <li class="nav-item">
+              <a class="nav-link text-light" href="/todo">Todo</a>
+            </li>
           <div class="dropdown">
             <a class="btn btn-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
               Manage
             </a>
           
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+              <li>
+                <a class="dropdown-item" href="/add-plant">Add Plant</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/add-inventory">Add Inventory Plant</a>
+              </li>
               <li><a class="dropdown-item" href="/manage-plant">Edit Plant</a></li>
               <li><a class="dropdown-item" href="/manage">Edit inventory plant</a></li>
+              <li><a class="dropdown-item" href="/delete-plant">Delete Plant</a></li>
+
+              <li><a class="dropdown-item" href="/add-post">Add Post</a></li>
             </ul>
           </div>
           <% } %>
           <% } %>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="/blog">Blog</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="/about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="/contact">Contact Us</a>
+          </li>
           
 
           <li class="nav-item">

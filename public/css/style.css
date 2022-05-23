@@ -330,3 +330,7 @@ th:last-child {
 .logout:hover {
   background-color: #bebebe;
 }
+
+.contact {
+  background-image: url("https://th.bing.com/th/id/R.0cc80cc7e3942f3d5c94962b4b2918d6?rik=itPnzG4AfSWNpg&pid=ImgRaw&r=0");
+}

@@ -1,28 +1,49 @@
 <section class="pagination d-flex justify-content-center my-3">
   <% if (currentPage !== 1 && previousPage !== 1) { %>
-  <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+  <li
+    style="background-color: light; border-color: #00cc88; color: #00cc88"
+    class="page-item"
+  >
+    <a class="page-link" href="?page=1">1</a>
+  </li>
 
   <% } %> <% if (hasPreviousPage) { %>
   <li class="page-item">
-    <a class="page-link" href="?page=<%= previousPage %>"
+    <a
+      style="background-color: light; border-color: #00cc88; color: #00cc88"
+      class="page-link"
+      href="?page=<%= previousPage %>"
       ><%= previousPage %></a
     >
   </li>
 
   <% } %>
-  <li class="page-item">
-    <a class="page-link active" href="?page=<%= currentPage %>"
+  <li class="page-item active">
+    <a
+      style="background-color: #00cc88; border-color: #00cc88; color: white"
+      class="page-link"
+      href="?page=<%= currentPage %>"
       ><%= currentPage %></a
     >
   </li>
   <% if (hasNextPage) { %>
   <li class="page-item">
-    <a class="page-link" href="?page=<%= nextPage %>"><%= nextPage %></a>
+    <a
+      style="background-color: light; border-color: #00cc88; color: #00cc88"
+      class="page-link"
+      href="?page=<%= nextPage %>"
+      ><%= nextPage %></a
+    >
   </li>
 
   <% } %> <% if (lastPage !== currentPage && nextPage !== lastPage) { %>
   <li class="page-item">
-    <a class="page-link" href="?page=<%= lastPage %>"><%= lastPage %></a>
+    <a
+      style="background-color: light; border-color: #00cc88; color: #00cc88"
+      class="page-link"
+      href="?page=<%= lastPage %>"
+      ><%= lastPage %></a
+    >
   </li>
   <% } %>
 </section>

@@ -45,7 +45,7 @@ exports.postSignUp = (req, res, next) => {
       },
     });
   } else {
-    console.log("222");
+    // console.log("222");
     db.execute(
       "INSERT INTO user(email , password , salt, role) VALUES(? , ? , ?, ?)",
       [email, hash, salt, "c"]
@@ -106,6 +106,10 @@ exports.postLogout = (req, res, next) => {
   });
 };
 
-exports.getContact = (req, res, next) => {};
+exports.getContact = (req, res, next) => {
+  res.render("contactus");
+};
 
-exports.getAbout = (req, res, next) => {};
+exports.getAbout = (req, res, next) => {
+  res.render("about");
+};

@@ -60,20 +60,25 @@ const addToCart = (userId, plantId) => {
 
 exports.postQuantity = (req, res, next) => {
   const q = req.body.quantity;
+  console.log(q);
   const userId = req.body.cusId;
   const plantId = req.body.IPID;
   // console.log(q, userId, plantId);
-  db.execute(
-    `UPDATE cart_item SET item_quantity = ?
+  if (q > 0) {
+    db.execute(
+      `UPDATE cart_item SET item_quantity = ?
     WHERE IPID = ? AND user_id = ?`,
-    [q, plantId, userId]
-  )
-    .then((result) => {
-      res.redirect("/cart");
-    })
-    .catch((err) => {
-      next(err);
-    });
+      [q, plantId, userId]
+    )
+      .then((result) => {
+        res.redirect("/cart");
+      })
+      .catch((err) => {
+        next(err);
+      });
+  } else {
+    res.redirect("/cart");
+  }
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
