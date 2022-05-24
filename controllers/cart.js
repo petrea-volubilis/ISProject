@@ -103,7 +103,6 @@ exports.postCartDeleteProduct =async (req, res, next) => {
 };
 
 exports.getDeleteItem = async (req, res, next) => {
-  console.log(here);
   const IPID = req.params.IPID;
   const cusId = req.params.user_id;
   try{
