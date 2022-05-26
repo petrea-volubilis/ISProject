@@ -63,12 +63,18 @@
         </div>
       </div>
     </sction>
+    <% if(plants.length != 0) { %>
     <div class="container">
       <%- include('./includes/pagination.ejs', {currentPage: currentPage,
       nextPage: nextPage, previousPage: previousPage, lastPage: lastPage,
       hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage}) %>
     </div>
+    <div style="height: 60px"></div>
     <div><%-include('./includes/footer.ejs')%></div>
+    <% } else { %>
+    <div style="font-size: 60px" class="text-center">No Inventory</div>
+    <div><%-include('./includes/footer1.ejs')%></div>
+    <% } %>
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

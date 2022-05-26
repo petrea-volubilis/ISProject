@@ -14,7 +14,7 @@ exports.getAddPlant = (req, res, next) => {
   res.render("add");
 };
 
-exports.postAddPlant = async(req, res, next) => {
+exports.postAddPlant = async (req, res, next) => {
   const light = req.body.light;
   const sof = req.body.sof;
   const fli = req.body.fli;
@@ -28,28 +28,48 @@ exports.postAddPlant = async(req, res, next) => {
   const height = req.body.height;
   const desc = req.body.desc;
 
-   await db.execute(
-    "INSERT INTO plant(scientific_name ,light , season_of_interest , flower_leaf_interest , pruning , landscape_use , growth_habit " +
-      " , soil , category , spread , height , decription) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
-    [sn,light, sof, fli, pruning, lu, gh,  soil, category, spread, height, desc]
-  )
-    .then(() => {
-      res.redirect("/add-plant");
+  return db
+    .execute("SELECT * from plant WHERE scientific_name = ?", [sn])
+    .then((result) => {
+      console.log(result);
+      if (result[0].length == 0) {
+        return db
+          .execute(
+            "INSERT INTO plant(scientific_name ,light , season_of_interest , flower_leaf_interest , pruning , landscape_use , growth_habit " +
+              " , soil , category , spread , height , decription) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
+            [
+              sn,
+              light,
+              sof,
+              fli,
+              pruning,
+              lu,
+              gh,
+              soil,
+              category,
+              spread,
+              height,
+              desc,
+            ]
+          )
+          .then((result) => {
+            res.redirect("plants");
+          });
+      } else {
+        res.redirect("/add-plant");
+      }
     })
     .catch((err) => {
-
       res.status(500);
       const error = new Error(err);
       error.httpStatusCode = 500;
       return next(error);
-     
     });
 };
 
-exports.getAddInventory =async (req, res, next) => {
-  try{
-  await db.execute("SELECT * FROM plant")
-    .then((result) => {
+exports.getAddInventory = async (req, res, next) => {
+  try {
+    await db.execute("SELECT * FROM plant").then((result) => {
       result = result[0];
       let names = [];
       for (let i = 0; i < result.length; i++) {
@@ -58,37 +78,33 @@ exports.getAddInventory =async (req, res, next) => {
       res.render("add-inventory", {
         plants: names,
       });
-    })
-    }catch(err)  {
-      res.status(500);
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
-    };
+    });
+  } catch (err) {
+    res.status(500);
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  }
 };
 
-
-exports.postfilterByCatgory =async (req, res, next) => {
-  
-  const category=req.body.catg;
-  console.log('welcom');
-  console.log(req.body);
+exports.postfilterByCatgory = async (req, res, next) => {
+  const category = req.body.category;
   const page = +req.query.page || 1;
   let totalItems;
-if (category=="") {
-  
-}else{
-  db.execute("SELECT COUNT(*) AS count FROM inventory_plant")
+
+  db.execute(
+    "SELECT COUNT(*) as count FROM plant p , inventory_plant ip where quantity > ? AND category = ? AND ip.active = ? AND p.scientific_name = ip.plant_id",
+    [0, category, "t"]
+  )
     .then((result) => {
       totalItems = result[0][0].count;
       let skip = (page - 1) * ITEMS_PER_PAGE;
       return db.execute(
-        `SELECT * FROM plant p , inventory_plant ip where p.scientific_name = ip.plant_id and p.category=? LIMIT ${skip} , ${ITEMS_PER_PAGE}`
-      ,[category]);
+        `SELECT * FROM plant p , inventory_plant ip where quantity > ? AND category = ? AND ip.active = ? AND p.scientific_name = ip.plant_id LIMIT ${skip} , ${ITEMS_PER_PAGE}`,
+        [0, category, "t"]
+      );
     })
     .then((products) => {
-      if(products[0].length>0){
-      console.log(products[0]);
       res.render("plants", {
         plants: products[0],
         currentPage: page,
@@ -97,36 +113,37 @@ if (category=="") {
         nextPage: page + 1,
         previousPage: page - 1,
         lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
-      });}
+      });
     })
     .catch((err) => {
       const error = new Error(err);
       error.httpStatusCode = 500;
-       next(error);
-    });}
+      return next(error);
+    });
 };
 
-exports.details = async(req, res, next) => {
+exports.details = async (req, res, next) => {
   const plantId = req.params.plantId;
-  try{
-  await db.execute(
-    "SELECT * FROM plant p , inventory_plant ip where p.scientific_name = ip.plant_id and IPID = ?",
-    [plantId]
-  )
-    .then((result) => {
-      myPlant = result[0][0];
-      res.render("plant-detail", {
-        plant: myPlant,
+  try {
+    await db
+      .execute(
+        "SELECT * FROM plant p , inventory_plant ip where p.scientific_name = ip.plant_id and IPID = ?",
+        [plantId]
+      )
+      .then((result) => {
+        myPlant = result[0][0];
+        res.render("plant-detail", {
+          plant: myPlant,
+        });
       });
-    })
-  }catch(err)  {
+  } catch (err) {
     res.status(500);
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
-    };
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  }
 };
-exports.postAddInventory =  async(req, res, next) => {
+exports.postAddInventory = async (req, res, next) => {
   const p = req.body.p;
   const name = req.body.name;
   const size = req.body.size;
@@ -135,31 +152,37 @@ exports.postAddInventory =  async(req, res, next) => {
   const price = req.body.price;
   const image = req.file;
   // console.log(image);
-  imageUrl = image.path;
-  // console.log(image, imageUrl);
-  //handle if no plant match in select input , or use the table in the db
-  try{
-   await db.execute("SELECT scientific_name FROM plant WHERE scientific_name = ?", [
-    p,
-  ]).then((myResult) => {
-    id = myResult[0][0].scientific_name;
-    db.execute(
-      "INSERT INTO inventory_plant(plant_id, name, size, color, quantity, price, image, active) VALUES(?,?,?,?,?,?,?,?)",
-      [id, name, size, color, quantity, price, imageUrl, "t"]
-    )
-      .then(() => {
-        console.log("fdg2");
+  if (!image) {
+    res.redirect("/add-inventory");
+  } else {
+    imageUrl = image.path;
+    // console.log(image, imageUrl);
+    //handle if no plant match in select input , or use the table in the db
+    try {
+      await db
+        .execute(
+          "SELECT scientific_name FROM plant WHERE scientific_name = ?",
+          [p]
+        )
+        .then((myResult) => {
+          id = myResult[0][0].scientific_name;
+          db.execute(
+            "INSERT INTO inventory_plant(plant_id, name, size, color, quantity, price, image, active) VALUES(?,?,?,?,?,?,?,?)",
+            [id, name, size, color, quantity, price, imageUrl, "t"]
+          ).then(() => {
+            console.log("fdg2");
 
-        console.log("Created Product");
-        res.redirect("/plants");
-      })
-      
-  })}catch(err) {
-    res.status(500);
-    const error = new Error(err);
-    error.httpStatusCode = 500;
-    return next(error);
-  };
+            console.log("Created Product");
+            res.redirect("/plants");
+          });
+        });
+    } catch (err) {
+      res.status(500);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    }
+  }
 };
 
 exports.postDeleteInventory = (req, res, next) => {
@@ -193,7 +216,7 @@ exports.filterByCategory = (req, res, next) => {
 
   db.execute(
     "SELECT COUNT(*) as count FROM plant p , inventory_plant ip where quantity > ? AND category = ? AND ip.active = ? AND p.scientific_name = ip.plant_id",
-    ["t", category, 0]
+    [0, category, "t"]
   )
     .then((result) => {
       totalItems = result[0][0].count;
@@ -255,43 +278,45 @@ exports.getPlants = (req, res, next) => {
     });
 };
 
-exports.details = async(req, res, next) => {
+exports.details = async (req, res, next) => {
   const plantId = req.params.plantId;
-  try{
-  await db.execute(
-    "SELECT * FROM plant p , inventory_plant ip where p.scientific_name = ip.plant_id and IPID = ?",
-    [plantId]
-  )
-    .then((result) => {
-      myPlant = result[0][0];
-      res.render("plant-detail", {
-        plant: myPlant,
+  try {
+    await db
+      .execute(
+        "SELECT * FROM plant p , inventory_plant ip where p.scientific_name = ip.plant_id and IPID = ?",
+        [plantId]
+      )
+      .then((result) => {
+        myPlant = result[0][0];
+        res.render("plant-detail", {
+          plant: myPlant,
+        });
       });
-    })
-  }catch(err)  {
+  } catch (err) {
     res.status(500);
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
-    };
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  }
 };
-exports.getInventory= async (req, res, next) => {
-  db.execute("SELECT * FROM wahah.inventory_plant").then(result=>{
+exports.getInventory = async (req, res, next) => {
+  db.execute("SELECT * FROM wahah.inventory_plant").then((result) => {
     console.log(result[0]);
-    res.render("inventory", {
-      inventory: result[0],
-    }).catch(err=>{
-      res.status(500);
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
-    });
-  })
+    res
+      .render("inventory", {
+        inventory: result[0],
+      })
+      .catch((err) => {
+        res.status(500);
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+      });
+  });
 };
-exports.getManagePlant = async(req, res, next) => {
-  try{
-  await db.execute("SELECT * FROM plant")
-    .then((result) => {
+exports.getManagePlant = async (req, res, next) => {
+  try {
+    await db.execute("SELECT * FROM plant").then((result) => {
       result = result[0];
       let names = [];
       for (let i = 0; i < result.length; i++) {
@@ -300,18 +325,19 @@ exports.getManagePlant = async(req, res, next) => {
       res.render("manage-plant", {
         plants: names,
       });
-    })
-  }catch(err)  {
-      res.status(500);
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
-    };
+    });
+  } catch (err) {
+    res.status(500);
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  }
 };
 
 exports.getEditPlant = async (req, res, next) => {
   let name = req.body.p;
-   await db.execute("SELECT * FROM plant where scientific_name = ?", [name])
+  await db
+    .execute("SELECT * FROM plant where scientific_name = ?", [name])
     .then((result) => {
       info = result[0][0];
 
@@ -326,7 +352,7 @@ exports.getEditPlant = async (req, res, next) => {
     });
 };
 
-exports.postEditPlant = async(req, res, next) => {
+exports.postEditPlant = async (req, res, next) => {
   const light = req.body.light;
   const sof = req.body.sof;
   const fli = req.body.fli;
@@ -339,21 +365,35 @@ exports.postEditPlant = async(req, res, next) => {
   const spread = req.body.spread;
   const height = req.body.height;
   const desc = req.body.desc;
-try{
-  await db.execute(
-    "UPDATE plant SET light = ?, season_of_interest = ?, flower_leaf_interest = ?, pruning = ?, landscape_use = ?, growth_habit = ?" +
-      " , soil = ?, category = ?, spread = ?, height = ?, decription= ? WHERE scientific_name = ?",
-    [light, sof, fli, pruning, lu, gh, soil, category, spread, height, desc, sn]
-  )
-    .then(() => {
-      res.redirect("/");
-    })
-  }catch(err)  {
-      res.status(500);
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
-    };
+  try {
+    await db
+      .execute(
+        "UPDATE plant SET light = ?, season_of_interest = ?, flower_leaf_interest = ?, pruning = ?, landscape_use = ?, growth_habit = ?" +
+          " , soil = ?, category = ?, spread = ?, height = ?, decription= ? WHERE scientific_name = ?",
+        [
+          light,
+          sof,
+          fli,
+          pruning,
+          lu,
+          gh,
+          soil,
+          category,
+          spread,
+          height,
+          desc,
+          sn,
+        ]
+      )
+      .then(() => {
+        res.redirect("/");
+      });
+  } catch (err) {
+    res.status(500);
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  }
 };
 
 exports.getEditInventory = (req, res, next) => {
@@ -385,24 +425,25 @@ exports.postEditInventory = async (req, res, next) => {
   const price = req.body.price;
   const image = req.file;
   const IPID = req.body.IPID;
- 
+
   imageUrl = "";
   if (image) {
     imageUrl = image.path;
-    try{
-   await db.execute(
-      "UPDATE inventory_plant SET name = ?, size = ?, color = ?, quantity = ?, price = ?, image = ? WHERE IPID = ?",
-      [name, size, color, quantity, price, imageUrl, IPID]
-    )
-      .then(() => {
-        res.redirect("/");
-      })
-    }catch(err) {
+    try {
+      await db
+        .execute(
+          "UPDATE inventory_plant SET name = ?, size = ?, color = ?, quantity = ?, price = ?, image = ? WHERE IPID = ?",
+          [name, size, color, quantity, price, imageUrl, IPID]
+        )
+        .then(() => {
+          res.redirect("/");
+        });
+    } catch (err) {
       res.status(500);
-        const error = new Error(err);
-        error.httpStatusCode = 500;
-        return next(error);
-      };
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    }
   } else {
     db.execute(
       "UPDATE inventory_plant SET name = ?, size = ?, color = ?, quantity = ?, price = ? WHERE IPID = ?",
@@ -424,12 +465,16 @@ exports.getManage = (req, res, next) => {
   const page = +req.query.page || 1;
   let totalItems;
 
-  db.execute("SELECT COUNT(*) AS count FROM inventory_plant")
+  db.execute(
+    "SELECT COUNT(*) AS count FROM inventory_plant where active = ? AND quantity > ?",
+    ["t", 0]
+  )
     .then((result) => {
       totalItems = result[0][0].count;
       let skip = (page - 1) * ITEMS_PER_PAGE;
       return db.execute(
-        `SELECT * FROM plant p , inventory_plant ip where p.scientific_name = ip.plant_id LIMIT ${skip} , ${ITEMS_PER_PAGE}`
+        `SELECT * FROM plant p , inventory_plant ip where ip.active = ? AND ip.quantity > ? AND p.scientific_name = ip.plant_id LIMIT ${skip} , ${ITEMS_PER_PAGE}`,
+        ["t", 0]
       );
     })
     .then((products) => {
@@ -521,23 +566,27 @@ exports.postAddPost = (req, res, next) => {
   const tag = req.body.tag;
   const description = req.body.description;
   const image = req.file;
-  imageUrl = image.path;
-  // imageUrl = image.path;
-  // const desc = req.body.description;
+  if (!image) {
+    res.redirect("/add-post");
+  } else {
+    imageUrl = image.path;
+    // imageUrl = image.path;
+    // const desc = req.body.description;
 
-  const newPost = new Post({
-    title: title,
-    tag: tag,
-    image: imageUrl,
-    description: description,
-  });
+    const newPost = new Post({
+      title: title,
+      tag: tag,
+      image: imageUrl,
+      description: description,
+    });
 
-  newPost
-    .save()
-    .then((result) => {
-      res.redirect("/blog");
-    })
-    .catch((err) => console.log(err));
+    newPost
+      .save()
+      .then((result) => {
+        res.redirect("/blog");
+      })
+      .catch((err) => console.log(err));
+  }
 };
 
 exports.deletePost = (req, res, next) => {
