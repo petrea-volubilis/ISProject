@@ -75,9 +75,22 @@ exports.postOrder =async (req, res, next) => {
             );
           })
           .then((result) => {
+            return db.execute(
+              `UPDATE inventory_plant ip INNER JOIN cart_item ci ON ci.IPID = ip.IPID 
+              SET ip.quantity = ip.quantity - ci.item_quantity
+              WHERE ip.IPID IN (SELECT IPID FROM cart_item WHERE user_id = ?)`,
+              [req.user.user_id]
+            );
+          })
+          .then((result) => {
             return db.execute("DELETE FROM cart_item WHERE user_id = ?", [
               req.user.user_id,
             ]);
+          })
+          .then((result) => {
+            return db.execute(
+              "DELETE FROM cart_item WHERE IPID IN (SELECT IPID FROM inventory_plant WHERE quantity < 1)"
+            );
           });
       }
     })

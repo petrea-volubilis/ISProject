@@ -24,15 +24,15 @@ exports.getSignUp = (req, res, next) => {
   });
 };
 
-exports.postSignUp = async(req, res, next) => {
-    const saltHash =await genPassword(req.body.password);
+exports.postSignUp = async (req, res, next) => {
+  const saltHash = await genPassword(req.body.password);
 
   const salt = saltHash.salt;
   const hash = saltHash.hash;
 
   const email = req.body.email;
   const password = req.body.password;
- const errors = await validationResult(req);
+  const errors = await validationResult(req);
   if (!errors.isEmpty()) {
     res.render("signup", {
       errorMessage: errors.array()[0].msg,
@@ -42,7 +42,8 @@ exports.postSignUp = async(req, res, next) => {
       },
     });
   } else {
-    await db.execute(
+    // console.log("222");
+    db.execute(
       "INSERT INTO user(email , password , salt, role) VALUES(? , ? , ?, ?)",
       [email, hash, salt, "c"]
     )
@@ -57,7 +58,7 @@ exports.postSignUp = async(req, res, next) => {
 exports.getAbout = (req, res, next) => {
   res.render("about");
 };
-exports.postLogin =async (req, res, next) => {
+exports.postLogin = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
@@ -73,7 +74,8 @@ exports.postLogin =async (req, res, next) => {
       },
     });
   } else {
-   await db.execute("SELECT * FROM user WHERE email = ?", [email])
+    await db
+      .execute("SELECT * FROM user WHERE email = ?", [email])
       .then((result) => {
         if (result[0].length == 0) {
           return res.status(422).render("login", {
@@ -103,5 +105,10 @@ exports.postLogout = (req, res, next) => {
   });
 };
 
-exports.getContact = (req, res, next) => {};
+exports.getContact = (req, res, next) => {
+  res.render("contactus");
+};
 
+exports.getAbout = (req, res, next) => {
+  res.render("about");
+};

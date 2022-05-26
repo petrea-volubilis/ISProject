@@ -3,27 +3,42 @@ const customer=require('../controllers/customer');
 const plant=require('../controllers/plant')
 const db = require("../util/database");
 const sinon = require('sinon');
+afterEach(async() => {
+  await deletuser('abdullah@gmail.com');
+  await deletPlant('dummy')
 
+});
+beforeEach(async() => {
+  await deletuser('abdullah@gmail.com');
+  await deletPlant('dummy')
+
+});
 
 
 describe('test getcart function',()=>{
-
+  
 test('should return plant in the cart  after call getcart',async()=>{
+   
     //create dummy user,plant...
     await addPlantToCart();
+    setTimeout(() => {
+      
+    }, 200);
     //get id for the dummy user
    let user_id=0;
     await db.execute('SELECT user_id FROM  wahah.user where email=?',['abdullah@gmail.com'])
 .then(result=>{
-  user_id= result[0][0].user_id
+  
+  user_idd= result[0][0].user_id
 });
+let plants='';
+
     const req={
-        user:{user_id}
+      user:{user_id:user_idd}
     }
     const res={
-        plants:null,
-        render:function(x,myPlant){
-            plants=myPlant;
+        render:function(x,plant){
+          plants=plant;
         },
         statusCode: 200,
         status: function(code) {
@@ -31,14 +46,23 @@ test('should return plant in the cart  after call getcart',async()=>{
           
         },
     }
-    
-     await cart.getCart(req,res,()=>{})
-expect(plants).toBeDefined();
-expect(plants.plants[0].plant_id).toContain('dummy');
-await deletuser('abdullah@gmail.com');
-await deletPlant('dummy');
 
-})
+
+
+
+
+
+     await cart.getCart(req,res,()=>{})
+setTimeout(() => {
+  expect(plants.plants[0].plant_id).toContain('dummy');
+      expect(plants).toBeDefined();
+}, 200);
+    
+
+
+await deletPlant('dummy')
+await deletuser('abdullah@gmail.com');
+  },7000)
 test('should return statusCode 500 if there any error',async()=>{
 
     const req={
@@ -70,7 +94,7 @@ describe('post quantit function',()=>{
 
 test('should redirect the page to /cart and add new Quantity ',async()=>{
  //create dummy user,plant...
- await addPlantToCart()
+ await addPlantToCart();
 
    //get id for the dummy user
 let user_id=0;
@@ -103,9 +127,9 @@ await db.execute(
           return this.statusCode = code;
           
         },
-        http:null,
+        http:'a',
         redirect: function(c){
-            return http=c;
+            return this.http=c;
          } ,
         
     }
@@ -115,16 +139,25 @@ await db.execute(
      let qunt=0;
      await  db.execute('SELECT * FROM  wahah.cart_item where user_id=? and IPID=?;',[req.body.cusId,req.body.IPID])
     .then(result=>{
-     qunt= result[0][0].item_quantity;
+
+setTimeout(() => {
+  qunt= result[0];
+}, 200);
+                
      ;});
-    expect(http).toBe("/cart");
-    expect(qunt).toBe(1);
+
+
+    setTimeout(()=>{
+
+      expect(qunt[0].item_quantity).toBe(1);
+    expect(res.http).toBe("/cart");
+    
+    },300)
 
     await deletuser('abdullah@gmail.com');
-    await deletPlant('dummy');
+    await deletPlant('dummy')
 
-
-})
+},900)
 
 
 test('should change statusCode 500 if there any error',async()=>{
@@ -161,17 +194,17 @@ test('should change statusCode 500 if there any error',async()=>{
 
 
 
+
 describe('post postCartDeleteProduct function',()=>{
 
-test('should Delete Product and redirect the page to /cart then change statusCode 500',async()=>{
+test('should Delete Product and redirect the page to /cart then change statusCode 204',async()=>{
  //create dummy user,plant...
- await addPlantToCart()
-
-   //get id for the dummy user
-let user_id=0;
+ await addPlantToCart();
+ //get id for the dummy user
+let id=0;
 await  db.execute('SELECT * FROM  wahah.user where email=?',['abdullah@gmail.com'])
 .then(result=>{
-    user_id= result[0][0].user_id;
+    id= result[0][0].user_id;
 
 
 });
@@ -180,6 +213,7 @@ await db.execute(
     "SELECT * FROM wahah.inventory_plant WHERE plant_id=?;",['dummy']
   )
     .then((result) => {
+      console.log(result[0][0]);
         plantId= result[0][0].IPID;
 
     })
@@ -188,18 +222,17 @@ await db.execute(
             productId: plantId,
         },
         user:{
-            user_id: user_id ,
+            user_id: id ,
         }
     }
      
-    
+    let http=null;
     const res={
         statusCode: 200,
         status:  function(code) {
           return this.statusCode = code;
           
         },
-        http:null,
         redirect: function(c){
             return http=c;
          } ,
@@ -208,14 +241,13 @@ await db.execute(
    
      await cart.postCartDeleteProduct(req,res,()=>{});
 
-    
-    expect(http).toBe("/cart");
-     expect(res).toHaveProperty("statusCode",204);
-
-    await deletuser('abdullah@gmail.com');
-    await deletPlant('dummy');
-
-
+     setTimeout(()=>{
+      expect(http).toBe("/cart");
+      expect(res).toHaveProperty("statusCode",204);
+     },300)
+   
+     await deletuser('abdullah@gmail.com');
+     await deletPlant('dummy')
 })
 
 
@@ -257,9 +289,9 @@ describe('post getDeleteItem function',()=>{
 
     test('should Delete Product and redirect the page to /cart then change statusCode 500',async()=>{
      //create dummy user,plant...
-     await addPlantToCart()
-    
-       //get id for the dummy user
+      await addPlantToCart();
+
+    //get id for the dummy user
     let user_id=0;
     await  db.execute('SELECT * FROM  wahah.user where email=?',['abdullah@gmail.com'])
     .then(result=>{
@@ -281,14 +313,13 @@ describe('post getDeleteItem function',()=>{
             user_id:user_id
         }
     }
-        
+        let http="";
         const res={
             statusCode: 200,
             status:  function(code) {
               return this.statusCode = code;
               
             },
-            http:null,
             redirect: function(c){
                 return http=c;
              } ,
@@ -298,13 +329,14 @@ describe('post getDeleteItem function',()=>{
          await cart.getDeleteItem(req,res,()=>{});
     
         
-        expect(http).toBe("/cart");
-         expect(res).toHaveProperty("statusCode",204);
-    
-        await deletuser('abdullah@gmail.com');
-        await deletPlant('dummy');
-    
-    
+        
+     setTimeout(()=>{
+      expect(http).toBe("/cart");
+      expect(res).toHaveProperty("statusCode",204);
+     },300)
+   
+     await deletuser('abdullah@gmail.com');
+     await deletPlant('dummy')
     })
     
     
@@ -382,14 +414,17 @@ const customerId=await db.execute('SELECT * FROM  wahah.user where email=?',['ab
  return result[0][0].user_id
 });
 //return return id of the plant
-const plantId =await db.execute(
+let plantId =0;
+await db.execute(
     "SELECT * FROM wahah.inventory_plant WHERE plant_id=?;",['dummy']
   )
     .then((result) => {
-    return result[0][0].IPID;
-
+      console.log(result[0][0]);
+        plantId =result[0][0].IPID;
     })
-   addToCart(customerId,plantId)
+      console.log(customerId,plantId);
+    await  addToCart(customerId,plantId)
+     
 
     
 }
@@ -432,8 +467,8 @@ async function addPlant(name) {
 }
 async function addinventory(name) {
      db.execute(
-        "INSERT INTO inventory_plant(plant_id, name, size, color, quantity, price, image) VALUES(?,?,?,?,?,?,?)",
-        [name,'sd', 5, 5, 4,54,'gpj']
+      "INSERT INTO inventory_plant(plant_id, name, size, color, quantity, price, image,active) VALUES(?,?,?,?,?,?,?,?)",
+      [name,'sd', 5, 5, 4,54,'gpj','t']
       )
         .then(() => {
         })
@@ -456,13 +491,14 @@ const addToCart = async(userId, plantId) => {
       ])
       .then((result) => {
         if (result[0].length == 0) {
+          console.log('not here');
           return  db.execute("INSERT INTO cart_item VALUES (? , ? , ?)", [
             plantId,
             userId,
             1,
           ]);
         } else {
-          // console.log(result[0][0]);
+          console.log(result[0][0]);
           let q = result[0][0].item_quantity + 1;
           return  db.execute(
             `UPDATE cart_item SET item_quantity = ?

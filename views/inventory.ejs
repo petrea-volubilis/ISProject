@@ -18,7 +18,48 @@
     <title>Orders</title>
   </head>
   <body>
-    <div class="h2"></div>
+    
+    <sction class="p-5 my-5" id="products">
+      <div class="cont">
+
+   <% for(let i = 0; i < plants.length ; i++) { %>
+  <main class="grid">
+    <article>
+<img src="<%=plants[i].image%>">
+<div class="text">
+<h3><%=plants[i].scientific_name%></h3>
+<p class="card-text"><%=plants[i].decription%></p>
+<h5 class="mb-3">$<%=plants[i].price%></h5>
+<% if(isAuthenticated) { %>
+  <form action="/cart" method="post">
+    <button
+      style="width: 100% "
+      id="addToCart"
+      class="btn btn-light text-warning"
+      type="submit"
+    >
+      Add To Cart
+    </button>
+    <input
+      id="plantIn"
+      type="hidden"
+      name="plantId"
+      value="<%= plants[i].IPID %>"
+    />
+  </form>
+  <% } %>
+  <a
+  href="/plant-detail/<%= plants[i].IPID %>"
+  class="btn btn-light text-warning"
+  >Details</a
+>
+</div>
+    </article>
+  </main>
+      <%}%>
+    </div> 
+
+    <!-- <div class="h2"></div>
     <%- include('./includes/nav.ejs') %>
     <main class="container">
       <% if (inventory.length <= 0) { %>
@@ -39,15 +80,14 @@
               <li class="list-group-item">
                quantity : <%= plant.quantity %> 
               </li>
-              <!-- <li class="list-group-item">A second item</li>
-          <li class="list-group-item">A third item</li> -->
+
             </ul>
           </div>
         </div>
         <% }); %>
       </div>
       <% } %>
-    </main>
+    </main> -->
     <%-include('./includes/footer1.ejs')%>
 
     <script

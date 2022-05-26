@@ -16,40 +16,45 @@
     />
     <link rel="stylesheet" href="css/style.css" />
     <title>Orders</title>
+      
   </head>
   <body>
     <div class="h2"></div>
     <%- include('./includes/nav.ejs') %>
-    <main class="container">
-      <% if (orders.length <= 0) { %>
-      <h1 style="text-align: center; margin-top: 20px">Nothing there!</h1>
+    <table class="content">
+      <thead>
+        <tr>
+        <th>order ID</th>
+        <th>content</th>
+        <th>Invoice</th>
+      </tr>
+      </thead>
 
-      <% } else { %>
-      <div class="row text-center g-3">
+      <tbody>
         <% orders.forEach(order => { %>
-        <div class="col-6 col-md-3">
-          <div class="card" style="width: 18rem">
-            <div class="card-header">
-              <h6>
-                Order - # <%= order.order_no %> -
-                <a href="/order/<%= order.order_no %>">Invoice</a>
-              </h6>
-            </div>
-            <ul class="list-group list-group-flush">
-              <% order.products.forEach(p => { %>
-              <li class="list-group-item">
+          <tr>
+          <td>
+            <%= order.order_no %>
+          </td>
+          <td>
+            <ul>
+            <% order.products.forEach(p => { %>
+              <li >
                 <%= p.name %> (<%= p.oi_quantity %>)
               </li>
               <% }); %>
-              <!-- <li class="list-group-item">A second item</li>
-          <li class="list-group-item">A third item</li> -->
             </ul>
-          </div>
-        </div>
-        <% }); %>
-      </div>
-      <% } %>
-    </main>
+          </td>
+
+          <td>
+            <a href="/order/<%= order.order_no %>">Invoice</a>
+
+          </td>
+        </tr>
+        <%})%>
+      </tbody>
+    </table>
+
     <%-include('./includes/footer1.ejs')%>
 
     <script

@@ -1,3 +1,107 @@
+.cont{
+  grid-template-columns: repeat(4, 1fr);
+  margin: 80px;
+  display: grid;
+  grid-gap: 0px;
+  align-items: center;
+
+}
+.grid{
+  margin: 5px;
+  display: grid;
+  grid-gap: 5px;
+  align-items: center;
+}
+.grid > article{
+  background: rgb(255, 184, 53);
+  border: none;
+  box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 3);
+  border-radius: 20px;
+  text-align: center;
+  width: 250px;
+  transition: transform .3s;
+}
+.grid >article:hover{
+  transform:translateY(5px);
+  box-shadow:2px 2px 6px 0px rgba(0, 0, 0, 3); ;
+}
+.grid > article img{
+  width: 250px;
+  max-width: 250px;
+  max-height: 300px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+.text{
+  padding: 0 20px 20px;
+}
+.text h3{
+  text-transform: uppercase;
+}
+.text button{
+  background: rgb(255, 255, 255);;
+  border-radius: 20px;
+  border: none;
+  color: #020202;
+  padding: 4px;
+  width: 100%;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.text a{
+
+  background: white;
+  border-radius: 20px;
+  border: none;
+  padding: 4px;
+  width: 100%;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  
+}
+table.content{
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.content {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  min-width: 400px;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.content thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+  font-weight: bold;
+}
+
+.content th,
+.content td {
+  padding: 12px 15px;
+}
+
+.content tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.content tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+
+
+
+
 @media (min-width: 768px) {
   .news-input {
     width: 50%;
@@ -221,7 +325,6 @@ th:last-child {
   text-align: center;
   color: white;
 }
-
 /* Individual bars */
 .bar-5 {
   width: 60%;
@@ -329,4 +432,8 @@ th:last-child {
 
 .logout:hover {
   background-color: #bebebe;
+}
+
+.contact {
+  background-image: url("https://th.bing.com/th/id/R.0cc80cc7e3942f3d5c94962b4b2918d6?rik=itPnzG4AfSWNpg&pid=ImgRaw&r=0");
 }

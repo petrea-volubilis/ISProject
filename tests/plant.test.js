@@ -555,8 +555,8 @@ async function addPlant(name) {
 }
 async function addinventory(name,ipid) {
     await db.execute(
-        "INSERT INTO inventory_plant(plant_id, name, size, color, quantity, price, image) VALUES(?,?,?,?,?,?,?)",
-        [name,'sd', 5, 5, 4,54,'gpj']
+        "INSERT INTO inventory_plant(plant_id, name, size, color, quantity, price, image,active) VALUES(?,?,?,?,?,?,?,?)",
+        [name,'sd', 5, 5, 4,54,'gpj','t']
       )
         .then(() => {
         })

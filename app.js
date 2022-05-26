@@ -4,6 +4,13 @@ const express = require("express");
 
 const app = express();
 
+const mongoose = require("mongoose");
+const dbURI =
+  "mongodb+srv://Yasser:Yasser29@cluster0.hirzu.mongodb.net/IS_Project?retryWrites=true&w=majority";
+
+// mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+const methodOverride = require("method-override");
+
 const multer = require("multer");
 
 const session = require("express-session");
@@ -72,6 +79,8 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 
+app.use(methodOverride("_method"));
+
 app.use((req, res, next) => {
   // console.log(req.user.role);
   let isAuthenticated = false;
@@ -80,9 +89,11 @@ app.use((req, res, next) => {
   }
   console.log(isAuthenticated);
   res.locals.isAuthenticated = isAuthenticated;
-  if(req.user){
+  if (req.user) {
     res.locals.role = req.user.role;
+    res.locals.email = req.user.email;
   }
+
   next();
 });
 
@@ -99,4 +110,11 @@ app.use(plantRoutes);
 
 app.use(orderRoutes);
 
-app.listen(3000);
+mongoose
+  .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then((result) => {
+    app.listen(3000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
