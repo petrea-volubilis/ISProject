@@ -20,10 +20,10 @@ const passport = require("passport");
 const db = require("./util/database");
 
 const options = {
-  host: "35.238.146.57",
+  host: "127.0.0.1",
   database: "wahah",
   user: "root",
-  password: "Yasser29",
+  password: "12345678",
   port: "3306",
 };
 
