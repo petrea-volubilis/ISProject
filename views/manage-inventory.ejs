@@ -46,7 +46,8 @@
     <article>
 <img src="<%=plants[i].image%>">
 <div class="text">
-<h3><%=plants[i].scientific_name%></h3>
+  <h3><%=plants[i].scientific_name%></h3>
+  <h4><%=plants[i].name%></h4>
 <p class="card-text"><%=plants[i].decription%></p>
 <h5 class="mb-3">$<%=plants[i].price%></h5>
 <% if(isAuthenticated) { %>

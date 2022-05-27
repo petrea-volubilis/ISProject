@@ -46,6 +46,7 @@
 <img src="<%=plants[i].image%>">
 <div class="text">
 <h3><%=plants[i].scientific_name%></h3>
+<h4><%=plants[i].name%></h4>
 <p class="card-text"><%=plants[i].decription%></p>
 <h5 class="mb-3">$<%=plants[i].price%></h5>
 <% if(isAuthenticated) { %>
@@ -77,59 +78,7 @@
       <%}%>
     </div> 
 
-      <!-- <div class="container">
-        <div class="row text-center g-3">
-          <% for(let i = 0; i < plants.length ; i++) { %>
-          <div class="col-6 col-md-3">
-            <div class="card bg-warning text-light">
-              <div class="card-body">
-                <h2 class="card-title mb-3">
-                  <%=plants[i].scientific_name%> <%=plants[i].name%>
-                </h2>
-                <img
-                  class="card-img img-fluid img-thumbnail mb-3"
-                  src="<%=plants[i].image%>"
-                  alt=""
-                />
-                <p class="card-text"><%=plants[i].decription%></p>
-                <h5 class="mb-3">$<%=plants[i].price%></h5>
-                <div class="row">
-                  <% if(isAuthenticated) { %>
-                  <div class="col">
-                    <form action="/cart" method="post">
-                      <button
-                        style="width: 100%"
-                        id="addToCart"
-                        class="btn btn-light text-warning"
-                        type="submit"
-                      >
-                        Add To Cart
-                      </button>
-                      <input
-                        id="plantIn"
-                        type="hidden"
-                        name="plantId"
-                        value="<%= plants[i].IPID %>"
-                      />
-                    </form>
-                  </div>
-                  <% } %>
-                  <span class="my-1"></span>
-                  <div class="col">
-                    <a
-                      style="width: 100%"
-                      href="/plant-detail/<%= plants[i].IPID %>"
-                      class="btn btn-light text-warning"
-                      >Details</a
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <% } %>
-        </div>
-      </div> -->
+     
     </sction>
     <% if(plants.length != 0) { %>
     <div class="container">

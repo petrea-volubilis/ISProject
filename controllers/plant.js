@@ -27,30 +27,9 @@ exports.postAddPlant = async (req, res, next) => {
   const spread = req.body.spread;
   const height = req.body.height;
   const desc = req.body.desc;
-<<<<<<< HEAD
-  ////
-  await db.execute(
-    "select * from plant where scientific_name=?",
-    [sn]
-  ).then(async(result) => {
-    if(result[0][0]){
-       res.redirect("/add-plant");
-    }else{
-      await db.execute(
-        "INSERT INTO plant(scientific_name ,light , season_of_interest , flower_leaf_interest , pruning , landscape_use , growth_habit " +
-          " , soil , category , spread , height , decription) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
-        [sn,light, sof, fli, pruning, lu, gh,  soil, category, spread, height, desc]
-      )
-        .then(() => {
-          res.redirect("/add-plant");
-        })
-    }
-=======
-
   return db
     .execute("SELECT * from plant WHERE scientific_name = ?", [sn])
     .then((result) => {
-      console.log(result);
       if (result[0].length == 0) {
         return db
           .execute(
@@ -77,7 +56,6 @@ exports.postAddPlant = async (req, res, next) => {
       } else {
         res.redirect("/add-plant");
       }
->>>>>>> 6770aae4603192e7fad5710d472fd90d71c58723
     })
     .catch((err) => {
       res.status(500);
@@ -109,18 +87,6 @@ exports.getAddInventory = async (req, res, next) => {
   }
 };
 
-<<<<<<< HEAD
-
-exports.postfilterByCatgory =async (req, res, next) => {
-  
-  let category=req.body.category;
-  console.log('welcom');
-  console.log(category);
-  const page = +req.query.page || 1;
-  let totalItems;
-
-  db.execute("SELECT COUNT(*) AS count FROM inventory_plant")
-=======
 exports.postfilterByCatgory = async (req, res, next) => {
   const category = req.body.category;
   const page = +req.query.page || 1;
@@ -130,7 +96,6 @@ exports.postfilterByCatgory = async (req, res, next) => {
     "SELECT COUNT(*) as count FROM plant p , inventory_plant ip where quantity > ? AND category = ? AND ip.active = ? AND p.scientific_name = ip.plant_id",
     [0, category, "t"]
   )
->>>>>>> 6770aae4603192e7fad5710d472fd90d71c58723
     .then((result) => {
       totalItems = result[0][0].count;
       let skip = (page - 1) * ITEMS_PER_PAGE;
@@ -142,14 +107,6 @@ exports.postfilterByCatgory = async (req, res, next) => {
       );
     })
     .then((products) => {
-<<<<<<< HEAD
-      console.log('ffffwelcom');
-
-      if(products[0].length>0){
-        console.log(products[0]);
-      console.log(products[0]);
-=======
->>>>>>> 6770aae4603192e7fad5710d472fd90d71c58723
       res.render("plants", {
         plants: products[0],
         currentPage: page,
@@ -163,11 +120,7 @@ exports.postfilterByCatgory = async (req, res, next) => {
     .catch((err) => {
       const error = new Error(err);
       error.httpStatusCode = 500;
-<<<<<<< HEAD
-       next(error);
-=======
       return next(error);
->>>>>>> 6770aae4603192e7fad5710d472fd90d71c58723
     });
 };
 
@@ -481,17 +434,6 @@ exports.postEditInventory = async (req, res, next) => {
   imageUrl = "";
   if (image) {
     imageUrl = image.path;
-<<<<<<< HEAD
-    try{
-   await db.execute(
-      "UPDATE inventory_plant SET name = ?, size = ?, color = ?, quantity = ?, price = ?, image = ? WHERE IPID = ?",
-      [name, size, color, quantity, price, imageUrl, IPID]
-    )
-      .then(() => {
-        res.redirect("/mange");
-      })
-    }catch(err) {
-=======
     try {
       await db
         .execute(
@@ -502,7 +444,6 @@ exports.postEditInventory = async (req, res, next) => {
           res.redirect("/");
         });
     } catch (err) {
->>>>>>> 6770aae4603192e7fad5710d472fd90d71c58723
       res.status(500);
       const error = new Error(err);
       error.httpStatusCode = 500;
