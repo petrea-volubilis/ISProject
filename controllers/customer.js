@@ -25,14 +25,14 @@ exports.getSignUp = (req, res, next) => {
 };
 
 exports.postSignUp = async (req, res, next) => {
-  const saltHash = await genPassword(req.body.password);
+  const saltHash =  genPassword(req.body.password);
 
   const salt = saltHash.salt;
   const hash = saltHash.hash;
 
   const email = req.body.email;
   const password = req.body.password;
-  const errors = await validationResult(req);
+  const errors =  validationResult(req);
   if (!errors.isEmpty()) {
     res.render("signup", {
       errorMessage: errors.array()[0].msg,
