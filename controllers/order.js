@@ -6,6 +6,53 @@ const PDFDocument = require("pdfkit");
 const db = require("../util/database");
 
 exports.getOrders = (req, res, next) => {
+  if(req.user.role=='mm'){
+    let num = 0;
+  db.execute("SELECT * FROM wahah.order ")
+    .then((result) => {
+      let orders = result[0];
+      let myOrders = orders;
+      if (orders.length === 0) {
+        res.render("order-manager", {
+          orders: myOrders,
+        });
+      } else {
+        function populate() {
+          for (let i = 0; i < orders.length; i++) {
+            console.log(myOrders[i].order_no);
+            db.execute(
+              "SELECT * FROM order_item JOIN inventory_plant USING(IPID) WHERE order_no = ?",
+              [myOrders[i].order_no]
+            )
+              .then((prods) => {
+                myOrders[i].products = prods[0];
+
+                num = num + 1;
+                if (num == myOrders.length) {
+                  res.render("order-manager", {
+                    orders: myOrders,
+                  });
+                }
+              })
+              .catch((err) => {
+                next(err);
+              });
+          }
+        }
+        return populate();
+      }
+    })
+    .then((orders) => {
+      console.log("ok");
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+
+
+  }else{
   let num = 0;
   db.execute("SELECT * FROM wahah.order WHERE user_id = ?", [req.user.user_id])
     .then((result) => {
@@ -49,6 +96,7 @@ exports.getOrders = (req, res, next) => {
       error.httpStatusCode = 500;
       return next(error);
     });
+  }
 };
 
 exports.postOrder =async (req, res, next) => {

@@ -49,7 +49,7 @@
 <h4><%=plants[i].name%></h4>
 <p class="card-text"><%=plants[i].decription%></p>
 <h5 class="mb-3">$<%=plants[i].price%></h5>
-<% if(isAuthenticated) { %>
+<% if(isAuthenticated && role != 'mm') { %>
   <form action="/cart" method="post">
     <button
       style="width: 100% "
